@@ -43,25 +43,14 @@ def load(FileName):
     Return-
     Dictionary containing the lowest value pair stored in the json file
     """
+    diction={}
     with open(FileName) as fw:
-        diction={}
         data = json.load(fw)
         for JsonKey,JsonValue in data.items():
             for pair in JsonValue:
                 for key,value in pair.items():
                     diction.update({key:value})
-
-def setUsers(diction):
-    users=diction
-
-def setUserGrps(diction):
-    user_grps=diction
-
-def setObjGrps(diction):
-    obj_grps=diction
-
-def setAccPer(diction):
-    acc_per=diction
+    return diction
 
 def AddUser(User, Passw):
     """
@@ -87,6 +76,7 @@ def Authenticate(User, Passw):
         print("Failure: bad password!")
     else:
         print("Success!")
+        print("Access granted!")
     return
 
 def printgrp(Group):

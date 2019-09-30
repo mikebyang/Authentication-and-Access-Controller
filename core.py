@@ -15,19 +15,19 @@ group.add_argument("-adda","--addaccess",help="Define an access right: a string 
 group.add_argument("-cana","--canaccess",help="Test whether a user can perform a specified operation on an object. Optionally, an object may be NULL, in which case CanAccess checks allows access if a user is part of a group for an operation on which no object group was defined.",nargs='+',action=aac.req_length(2,3))
 args = parser.parse_args()
 #load the correct files
-if args.adduser or args.authenticate:
-    try:
-        aac.setUsers(aac.load("users"))
-    except FileNotFoundError as FNFE:
-        print("No user file was found.")
-    except Exception as e:
-        print("Unknown error has occured:")
-        print(e)
-elif args.addusertogroup or args.addobjecttogroup:
-    aac.setUserGrps(aac.load("user_grps"))
-    aac.setObjGrps(aac.load("obj_grps"))
-elif args.addaccess or args.canaccess:
-    aac.setAccPer(aac.load("acc_per"))
+try:
+    if args.adduser or args.authenticate:
+        aac.users = aac.load("users")
+    elif args.addusertogroup or args.addobjecttogroup:
+        aac.user_grps = aac.load("user_grps")
+        aac.obj_grps = aac.load("obj_grps")
+    elif args.addaccess or args.canaccess:
+        aac.acc_per = aac.load("acc_per")
+except FileNotFoundError as FNFE:
+    print("No user file was found.")
+except Exception as e:
+    print("Unknown error has occured:")
+    print(e)
 #execution
 if args.adduser:
     aac.AddUser(args.adduser[0], args.adduser[1])
@@ -48,5 +48,6 @@ elif args.addusertogroup or args.addobjecttogroup:
     aac.save(aac.user_grps, "user_grps")
     aac.save(aac.obj_grps,"obj_grps")
 elif args.addaccess or args.canaccess:
-    aac.save()
+    aac.save(aac.acc_per,"acc_per")
+print("Shutting down.....")
 sys.exit(0)
